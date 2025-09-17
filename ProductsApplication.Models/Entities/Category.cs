@@ -11,5 +11,5 @@ public class Category
     public int CategoryId { get; set; }
     public string CategoryName { get; set; } = default!;
     public DateTime CreatedAt { get; set; }
-    public List<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
+    public ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
 }

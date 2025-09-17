@@ -14,5 +14,5 @@ public class Product
     public string? Description { get; set; }
     public int StockQuantity { get; set; }
     public DateTime CreatedAt { get; set; }
-    public List<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
+    public ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
 }

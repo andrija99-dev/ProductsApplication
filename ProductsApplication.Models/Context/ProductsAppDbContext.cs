@@ -27,13 +27,13 @@ public class ProductsAppDbContext : DbContext
 
         modelBuilder.Entity<ProductCategory>()
             .HasOne(pc => pc.Product)
-            .WithMany(p => ProductCategories)
+            .WithMany(p => p.ProductCategories)
             .HasForeignKey(pc => pc.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ProductCategory>()
             .HasOne(pc => pc.Category)
-            .WithMany(c => ProductCategories)
+            .WithMany(c => c.ProductCategories)
             .HasForeignKey(pc => pc.CategoryId);
     }
 
