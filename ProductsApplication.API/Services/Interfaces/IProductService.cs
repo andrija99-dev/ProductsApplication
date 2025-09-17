@@ -1,13 +1,14 @@
-﻿using ProductsApplication.Models.Entities;
+﻿using ProductsApplication.API.DTOs;
+using ProductsApplication.Models.Entities;
 
 namespace ProductsApplication.API.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<IEnumerable<Product>> GetAll();
-        Task<Product?> GetById(int id);
-        Task<Product> Create(Product product);
-        Task<Product?> Update(Product product);
-        Task<bool> Delete(int id);
+        Task<IEnumerable<ProductDto>> GetAll();
+        Task<ProductDto> GetById(int id);
+        Task<ProductDto> Create(CreateProductDto dto);
+        Task<ProductDto> Update(int id, CreateProductDto dto);
+        Task Delete(int id);
     }
 }

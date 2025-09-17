@@ -15,8 +15,16 @@ namespace ProductsApplication.API.Repositories
             _context = context;
         }
 
-        public async Task<Product> AddAsync(Product product)
+        public async Task<Product> AddAsync(Product product, List<int> categoryIds)
         {
+            foreach(var categoryId in categoryIds)
+            {
+                product.ProductCategories.Add(new ProductCategory
+                {
+                    CategoryId = categoryId
+                });
+            }
+
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
             return product;
@@ -24,28 +32,55 @@ namespace ProductsApplication.API.Repositories
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products
+                .Include(p => p.ProductCategories)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
             if(product == null)
             {
                 return false;
             }
-            _context.Remove(product);
+
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync() 
         {
-            return await _context.Products.Include(p => p.ProductCategories).ToListAsync();
+            return await _context.Products
+                .Include(p => p.ProductCategories)
+                .ThenInclude(pc => pc.Category)
+                .ToListAsync();
         }
 
         public async Task<Product?> GetByIdAsync(int id)
         {
-            return await _context.Products.Include(p => p.ProductCategories).FirstOrDefaultAsync(p => p.ProductId == id);
+            return await _context.Products
+                .Include(p => p.ProductCategories)
+                .ThenInclude(pc => pc.Category)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
         }
 
-        public async Task<Product> UpdateAsync(Product product)
+        public async Task<Product?> GetByNameAsync(string name)
         {
+            return await _context.Products
+                .Include(p => p.ProductCategories)
+                .ThenInclude(pc => pc.Category)
+                .FirstOrDefaultAsync(p => p.ProductName == name);
+        }
+
+        public async Task<Product> UpdateAsync(Product product, List<int> categoryIds)
+        {
+            product.ProductCategories.Clear();
+            foreach (var categoryId in categoryIds)
+            {
+                product.ProductCategories.Add(new ProductCategory
+                {
+                    CategoryId = categoryId
+                });
+            }
+
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
             return product;

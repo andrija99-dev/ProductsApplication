@@ -1,4 +1,6 @@
 using ProductsApplication.API.Extensions;
+using ProductsApplication.API.Middleware;
+using ProductsApplication.API.Services.Interfaces;
 using ProductsApplication.Models.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,13 @@ builder.Services.AddDatabaseModels(builder.Configuration);
 
 
 var app = builder.Build();
+
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
+await seeder.Seed();
+
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
