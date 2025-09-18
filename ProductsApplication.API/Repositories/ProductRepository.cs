@@ -15,7 +15,7 @@ namespace ProductsApplication.API.Repositories
             _context = context;
         }
 
-        public async Task<Product> AddAsync(Product product, List<int> categoryIds)
+        public Product Add(Product product, List<int> categoryIds)
         {
             product.CreatedAt = DateTime.Now;
             foreach(var categoryId in categoryIds)
@@ -27,7 +27,6 @@ namespace ProductsApplication.API.Repositories
             }
 
             _context.Products.Add(product);
-            await _context.SaveChangesAsync();
             return product;
         }
 
@@ -43,7 +42,6 @@ namespace ProductsApplication.API.Repositories
             }
 
             _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
             return true;
         }
 
@@ -57,7 +55,7 @@ namespace ProductsApplication.API.Repositories
             if (!string.IsNullOrWhiteSpace(name))
             {
                 var lowered = name.ToLower();
-                query = query.Where(p => p.ProductName.Contains(lowered));
+                query = query.Where(p => p.ProductName.ToLower().Contains(lowered));
             }
 
             return await query.ToListAsync();
@@ -80,7 +78,7 @@ namespace ProductsApplication.API.Repositories
                 .FirstOrDefaultAsync(p => p.ProductName == name);
         }
 
-        public async Task<Product> UpdateAsync(Product product, List<int> categoryIds)
+        public Product Update(Product product, List<int> categoryIds)
         {
             product.ProductCategories.Clear();
             foreach (var categoryId in categoryIds)
@@ -92,7 +90,6 @@ namespace ProductsApplication.API.Repositories
             }
 
             _context.Products.Update(product);
-            await _context.SaveChangesAsync();
             return product;
         }
     }

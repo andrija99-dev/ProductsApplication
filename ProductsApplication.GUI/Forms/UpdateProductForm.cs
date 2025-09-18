@@ -71,7 +71,8 @@ namespace ProductsApplication.GUI.Forms
             }
             else
             {
-                MessageBox.Show("Error updating product");
+                var exceptionMessage = await response.Content.ReadAsStringAsync();
+                MessageBox.Show($"error: {exceptionMessage}");
             }
 
         }

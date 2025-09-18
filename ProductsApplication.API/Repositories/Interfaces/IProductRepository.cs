@@ -6,8 +6,8 @@ namespace ProductsApplication.API.Repositories.Interfaces
     {
         Task<IEnumerable<Product>> GetAllAsync(string? name);
         Task<Product?> GetByIdAsync(int id);
-        Task<Product> AddAsync(Product product, List<int> categoryIds);
-        Task<Product> UpdateAsync(Product product, List<int> categoryIds);
+        Product Add(Product product, List<int> categoryIds);
+        Product Update(Product product, List<int> categoryIds);
         Task<bool> DeleteAsync(int id);
         Task<Product?> GetByNameAsync(string name);
     }

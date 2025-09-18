@@ -103,7 +103,8 @@ namespace ProductsApplication.GUI
             }
             else
             {
-                MessageBox.Show("Error loading products");
+                var exceptionMessage = await response.Content.ReadAsStringAsync();
+                MessageBox.Show($"error: {exceptionMessage}");
             }
         }
 
@@ -136,7 +137,8 @@ namespace ProductsApplication.GUI
                 }
                 else
                 {
-                    MessageBox.Show("Error deleting products");
+                    var exceptionMessage = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"error: {exceptionMessage}");
                 }
             }
         }

@@ -59,14 +59,14 @@
             panel1.Controls.Add(lblStockQuantity);
             panel1.Controls.Add(lblPrice);
             panel1.Controls.Add(lblProductName);
-            panel1.Location = new Point(84, 34);
+            panel1.Location = new Point(12, 12);
             panel1.Name = "panel1";
-            panel1.Size = new Size(731, 354);
+            panel1.Size = new Size(588, 482);
             panel1.TabIndex = 0;
             // 
             // btnAddProductUpdate
             // 
-            btnAddProductUpdate.Location = new Point(332, 298);
+            btnAddProductUpdate.Location = new Point(189, 387);
             btnAddProductUpdate.Name = "btnAddProductUpdate";
             btnAddProductUpdate.Size = new Size(141, 28);
             btnAddProductUpdate.TabIndex = 21;
@@ -80,7 +80,7 @@
             panel2.Controls.Add(cbCategory2Update);
             panel2.Controls.Add(lblCategories);
             panel2.Controls.Add(cbCategory1Update);
-            panel2.Location = new Point(536, 50);
+            panel2.Location = new Point(189, 204);
             panel2.Name = "panel2";
             panel2.Size = new Size(141, 151);
             panel2.TabIndex = 20;
@@ -129,28 +129,29 @@
             // 
             // tbStockQuantityUpdate
             // 
-            tbStockQuantityUpdate.Location = new Point(177, 132);
+            tbStockQuantityUpdate.Location = new Point(189, 105);
             tbStockQuantityUpdate.Name = "tbStockQuantityUpdate";
             tbStockQuantityUpdate.Size = new Size(222, 27);
             tbStockQuantityUpdate.TabIndex = 19;
             // 
             // tbDescriptionUpdate
             // 
-            tbDescriptionUpdate.Location = new Point(177, 174);
+            tbDescriptionUpdate.Location = new Point(189, 147);
             tbDescriptionUpdate.Name = "tbDescriptionUpdate";
             tbDescriptionUpdate.Size = new Size(322, 27);
             tbDescriptionUpdate.TabIndex = 18;
+            tbDescriptionUpdate.PlaceholderText = "Optional";
             // 
             // tbPriceUpdate
             // 
-            tbPriceUpdate.Location = new Point(177, 89);
+            tbPriceUpdate.Location = new Point(189, 62);
             tbPriceUpdate.Name = "tbPriceUpdate";
             tbPriceUpdate.Size = new Size(222, 27);
             tbPriceUpdate.TabIndex = 17;
             // 
             // tbProductNameUpdate
             // 
-            tbProductNameUpdate.Location = new Point(177, 50);
+            tbProductNameUpdate.Location = new Point(189, 23);
             tbProductNameUpdate.Name = "tbProductNameUpdate";
             tbProductNameUpdate.Size = new Size(222, 27);
             tbProductNameUpdate.TabIndex = 16;
@@ -158,7 +159,7 @@
             // lblDescription
             // 
             lblDescription.AutoSize = true;
-            lblDescription.Location = new Point(56, 181);
+            lblDescription.Location = new Point(68, 154);
             lblDescription.Name = "lblDescription";
             lblDescription.Size = new Size(85, 20);
             lblDescription.TabIndex = 15;
@@ -167,7 +168,7 @@
             // lblStockQuantity
             // 
             lblStockQuantity.AutoSize = true;
-            lblStockQuantity.Location = new Point(55, 139);
+            lblStockQuantity.Location = new Point(67, 112);
             lblStockQuantity.Name = "lblStockQuantity";
             lblStockQuantity.Size = new Size(105, 20);
             lblStockQuantity.TabIndex = 14;
@@ -176,7 +177,7 @@
             // lblPrice
             // 
             lblPrice.AutoSize = true;
-            lblPrice.Location = new Point(56, 96);
+            lblPrice.Location = new Point(68, 69);
             lblPrice.Name = "lblPrice";
             lblPrice.Size = new Size(41, 20);
             lblPrice.TabIndex = 13;
@@ -185,7 +186,7 @@
             // lblProductName
             // 
             lblProductName.AutoSize = true;
-            lblProductName.Location = new Point(56, 57);
+            lblProductName.Location = new Point(68, 30);
             lblProductName.Name = "lblProductName";
             lblProductName.Size = new Size(104, 20);
             lblProductName.TabIndex = 12;
@@ -195,7 +196,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(904, 425);
+            ClientSize = new Size(627, 534);
             Controls.Add(panel1);
             Name = "UpdateProductForm";
             Text = "UpdateProductForm";

@@ -4,23 +4,23 @@ using ProductsApplication.API.DTOs;
 using ProductsApplication.API.Exceptions;
 using ProductsApplication.API.Repositories.Interfaces;
 using ProductsApplication.API.Services.Interfaces;
+using ProductsApplication.API.UnitOfWork;
+using ProductsApplication.API.UnitOfWork.Interfaces;
 using ProductsApplication.Models.Entities;
 
 namespace ProductsApplication.API.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _repository;
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<ProductService> _logger;
 
-        public ProductService(IProductRepository repository, ICategoryRepository categoryRepository, 
+        public ProductService(IUnitOfWork unitOfWork, 
             IMapper mapper, ILogger<ProductService> logger)
         {
-            _repository = repository;
             _mapper = mapper;
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -28,14 +28,14 @@ namespace ProductsApplication.API.Services
         {
             _logger.LogInformation("Creating new Product: {ProductName}", dto.ProductName);
 
-            var existingProduct = await _repository.GetByNameAsync(dto.ProductName);
+            var existingProduct = await _unitOfWork.Products.GetByNameAsync(dto.ProductName);
             if(existingProduct != null)
             {
                 _logger.LogWarning("Product with name: {ProductName} already exists", dto.ProductName);
                 throw new AlreadyExistsException(nameof(Product), dto.ProductName);
             }
 
-            var categoriesValid = await _categoryRepository.CategoriesExistAsync(dto.CategoryIds);
+            var categoriesValid = await _unitOfWork.Categories.CategoriesExistAsync(dto.CategoryIds);
             if (!categoriesValid)
             {
                 _logger.LogWarning("One or more categories for Product: {ProductName}, does not exist", dto.ProductName);
@@ -43,23 +43,26 @@ namespace ProductsApplication.API.Services
             }
 
             var product = _mapper.Map<Product>(dto);
-            var created = await _repository.AddAsync(product, dto.CategoryIds);
+            var created = _unitOfWork.Products.Add(product, dto.CategoryIds);
+            await _unitOfWork.SaveChangesAsync();
 
             _logger.LogInformation("Product {ProductName} succesfully created, with ID: {ProductId}", product.ProductName, product.ProductId);
-            var createdWithCategories = await _repository.GetByIdAsync(created.ProductId);
+            var createdWithCategories = await _unitOfWork.Products.GetByIdAsync(created.ProductId);
             return _mapper.Map<ProductDto>(createdWithCategories);
         }
 
         public async Task Delete(int id)
         {
             _logger.LogInformation("Deleting Product with ID: {ProductId}", id);
-            var deleted =  await _repository.DeleteAsync(id);
+            var deleted =  await _unitOfWork.Products.DeleteAsync(id);
             if (!deleted)
             {
                 _logger.LogWarning("Product with ID: {ProductId} does not exist", id);
 
                 throw new NotFoundException(nameof(Product));
             }
+
+            await _unitOfWork.SaveChangesAsync();
 
             _logger.LogInformation("Product with ID: {ProductId} succesfully deleted", id);
 
@@ -69,7 +72,7 @@ namespace ProductsApplication.API.Services
         {
             _logger.LogInformation("Fetching all Products, with filter: {Filter}", name);
 
-            var products = await _repository.GetAllAsync(name);
+            var products = await _unitOfWork.Products.GetAllAsync(name);
             _logger.LogInformation("{ProductCount} Products retrieved from database", products.Count());
 
             return products.Select(p => _mapper.Map<ProductDto>(p));
@@ -79,7 +82,7 @@ namespace ProductsApplication.API.Services
         {
             _logger.LogInformation("Fetching Product with ID: {ProductId}", id);
 
-            var product = await _repository.GetByIdAsync(id);
+            var product = await _unitOfWork.Products.GetByIdAsync(id);
             if(product == null)
             {
                 _logger.LogWarning("Product with ID: {ProductId} does not exist", id);
@@ -96,7 +99,7 @@ namespace ProductsApplication.API.Services
         {
             _logger.LogInformation("Updating Product with ID: {ProductId}", id);
 
-            var existing = await _repository.GetByIdAsync(id);
+            var existing = await _unitOfWork.Products.GetByIdAsync(id);
             if(existing == null)
             {
                 _logger.LogWarning("Product with ID: {ProductId} does not exist", id);
@@ -104,14 +107,14 @@ namespace ProductsApplication.API.Services
                 throw new NotFoundException(nameof(Product));
             }
 
-            var productWithSameName = await _repository.GetByNameAsync(dto.ProductName);
+            var productWithSameName = await _unitOfWork.Products.GetByNameAsync(dto.ProductName);
             if(productWithSameName != null && productWithSameName.ProductId != id)
             {
                 _logger.LogWarning("Another Product with name: {ProductName} already exists", dto.ProductName);
                 throw new AlreadyExistsException(nameof(Product), dto.ProductName);
             }
 
-            var categoriesValid = await _categoryRepository.CategoriesExistAsync(dto.CategoryIds);
+            var categoriesValid = await _unitOfWork.Categories.CategoriesExistAsync(dto.CategoryIds);
             if (!categoriesValid)
             {
                 _logger.LogWarning("One or more categories for ProductId: {ProductId}, does not exist", id);
@@ -121,10 +124,11 @@ namespace ProductsApplication.API.Services
 
             _mapper.Map(dto, existing);
 
-            var updated = await _repository.UpdateAsync(existing, dto.CategoryIds);
+            var updated = _unitOfWork.Products.Update(existing, dto.CategoryIds);
+            await _unitOfWork.SaveChangesAsync();
 
             _logger.LogInformation("Product with ID: {ProductId} succesfully updated", id);
-            var updatedWithCategories = await _repository.GetByIdAsync(existing.ProductId);
+            var updatedWithCategories = await _unitOfWork.Products.GetByIdAsync(existing.ProductId);
 
             return _mapper.Map<ProductDto>(updatedWithCategories);
         }

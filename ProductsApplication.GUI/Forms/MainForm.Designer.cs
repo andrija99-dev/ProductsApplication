@@ -149,6 +149,7 @@
             tbDescription.Name = "tbDescription";
             tbDescription.Size = new Size(322, 27);
             tbDescription.TabIndex = 7;
+            tbDescription.PlaceholderText = "Optional";
             // 
             // tbPrice
             // 
@@ -256,6 +257,7 @@
             tbSearch.Name = "tbSearch";
             tbSearch.Size = new Size(322, 27);
             tbSearch.TabIndex = 17;
+            tbSearch.PlaceholderText = "Optional";
             // 
             // btnSearch
             // 
