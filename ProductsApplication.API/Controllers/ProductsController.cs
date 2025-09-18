@@ -17,9 +17,9 @@ namespace ProductsApplication.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? name)
         {
-            var products = await _productService.GetAll();
+            var products = await _productService.GetAll(name);
             return Ok(products);
         }
 

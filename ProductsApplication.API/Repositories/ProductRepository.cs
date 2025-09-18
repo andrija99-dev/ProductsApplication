@@ -17,6 +17,7 @@ namespace ProductsApplication.API.Repositories
 
         public async Task<Product> AddAsync(Product product, List<int> categoryIds)
         {
+            product.CreatedAt = DateTime.Now;
             foreach(var categoryId in categoryIds)
             {
                 product.ProductCategories.Add(new ProductCategory
@@ -46,12 +47,21 @@ namespace ProductsApplication.API.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync() 
+        public async Task<IEnumerable<Product>> GetAllAsync(string? name) 
         {
-            return await _context.Products
+            var query = _context.Products
                 .Include(p => p.ProductCategories)
                 .ThenInclude(pc => pc.Category)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                var lowered = name.ToLower();
+                query = query.Where(p => p.ProductName.Contains(lowered));
+            }
+
+            return await query.ToListAsync();
+
         }
 
         public async Task<Product?> GetByIdAsync(int id)

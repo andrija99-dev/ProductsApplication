@@ -65,11 +65,11 @@ namespace ProductsApplication.API.Services
 
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAll()
+        public async Task<IEnumerable<ProductDto>> GetAll(string? name)
         {
-            _logger.LogInformation("Fetching all Products");
+            _logger.LogInformation("Fetching all Products, with filter: {Filter}", name);
 
-            var products = await _repository.GetAllAsync();
+            var products = await _repository.GetAllAsync(name);
             _logger.LogInformation("{ProductCount} Products retrieved from database", products.Count());
 
             return products.Select(p => _mapper.Map<ProductDto>(p));

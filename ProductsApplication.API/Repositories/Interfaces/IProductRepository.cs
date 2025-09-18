@@ -4,7 +4,7 @@ namespace ProductsApplication.API.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetAllAsync();
+        Task<IEnumerable<Product>> GetAllAsync(string? name);
         Task<Product?> GetByIdAsync(int id);
         Task<Product> AddAsync(Product product, List<int> categoryIds);
         Task<Product> UpdateAsync(Product product, List<int> categoryIds);
